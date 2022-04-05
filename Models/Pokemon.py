@@ -8,6 +8,7 @@ class Pokemon:
         self.type1 = type1
         self.type2 = type2
         self.attacks = [] #Vector de ataques
+        self.stats = {}
         self.baseStats = {}
         self.ev = {}
         self.iv = {}
