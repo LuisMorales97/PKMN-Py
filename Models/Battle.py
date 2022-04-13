@@ -25,8 +25,16 @@ class Battle:
             attack2 = self.pokemon2.attacks[command2.action[DO_ATTACK]]
 
         #Formula de daño
+        # self.pokemon2.current_hp -= self.compute_damage(attack1, self.pokemon1, self.pokemon2)
+        # self.pokemon1.current_hp -= self.compute_damage(attack2, self.pokemon2, self.pokemon1)
+        # self.actual_turn += 1
         self.pokemon2.current_hp -= self.compute_damage(attack1, self.pokemon1, self.pokemon2)
-        self.pokemon1.current_hp -= self.compute_damage(attack2, self.pokemon2, self.pokemon1)
+        if (self.pokemon2.current_hp > 0):
+            self.pokemon1.current_hp -= self.compute_damage(attack2, self.pokemon2, self.pokemon1)
+
+        self.pokemon2.current_hp = max(0, self.pokemon2.current_hp)
+        self.pokemon1.current_hp = max(0, self.pokemon1.current_hp)
+
         self.actual_turn += 1
 
     def print_winner(self):
@@ -62,15 +70,17 @@ class Battle:
             stab = 1.5
         #Computar tipo de efectividad
         effectiveness1 = TYPE_CHART[pokemon2.type1][attack.type]
-        effectiveness2 = TYPE_CHART[pokemon2.type2][attack.type]
+        effectiveness2 = 1
+        if pokemon2.type2:
+            effectiveness2 = TYPE_CHART[pokemon2.type2][attack.type]
         effectiveness_final = effectiveness1 * effectiveness2
-        print(stab*effectiveness_final)
         
+        #Compute Critical
         critical = 1
-        if random.random() < 0.1:
-            print(pokemon1.name, "realizo un ataque critico")
+        if random.random() <= 0.1:
+            print(pokemon1.name, " realizó un ataque critico")
             critical = 1.5
-        return stab* effectiveness_final
+        return stab * effectiveness_final * critical
 
 class Turn:
     def __init__(self):
